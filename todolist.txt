@@ -1,0 +1,20 @@
+
+            TO DO LIST
+
+1. Post page checks if database cookie and front end cookie are the same and if
+    ? returns true and displays add post button
+    : hids add post button and 
+
+2. Add post page
+    checks if user has cookie and
+    if its maches db cookie
+2.1 Post page has
+    1. title
+    2. text
+    3. category
+2.2 Post page send to server
+    1. title
+    2. text
+    3. created
+    4. username
+    
