@@ -25,7 +25,6 @@ func profile(w http.ResponseWriter, req *http.Request) {
 	check := userCheck(db, cookieData.Username, cookieData.Cookie)
 
 	if check {
-
 		//search at database if user already exists with this username or email
 		people := getUserInfo(db, cookieData.Username)
 		userdata = userData{

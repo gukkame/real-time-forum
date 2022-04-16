@@ -28,6 +28,11 @@ function removeCookie(name) {
 }
 
 function dateToString(date) {
+    console.log("date ", date);
+    if (typeof date === "undefined") {
+        date = Date.parse(date)
+    }
+    console.log("date222 ", date);
     return (
         date.getFullYear() +
         "-" +
@@ -40,4 +45,17 @@ function dateToString(date) {
 function pad(n, s = String(n)) {
     return s.length < 2 ? `0${s}` : s;
 }
-export { getCookie, removeCookie, dateToString, checkCookie }
+
+function getAge(dateString) {
+    console.log("date ", dateString);
+    dateString = dateString.toString();
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+export { getCookie, removeCookie, dateToString, checkCookie, getAge }

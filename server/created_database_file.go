@@ -70,7 +70,7 @@ func createPost(dbConn *sql.DB) {
 		title varchar(255) not null,
 		content  text not null,
 		created  datetime not null DEFAULT CURRENT_TIMESTAMP,
-		image blob null,
+		category varchar(255) not null,
 		user_name varchar(255) not null,
 	   FOREIGN KEY (user_name) REFERENCES user_account(user_name)
 	 )
@@ -78,7 +78,7 @@ func createPost(dbConn *sql.DB) {
 		`)
 	checkErr(err)
 	statement.Exec()
-
+	// image blob null, add this if you wanna add picture to post
 }
 
 func createCategoryPost(dbConn *sql.DB) {
@@ -101,7 +101,6 @@ func createComment(dbConn *sql.DB) {
 	CREATE TABLE comment  (
 		id  integer not null PRIMARY KEY AUTOINCREMENT,
 		content  text not null,
-		image blob null,
 	   post_id integer not null,
 	   user_name varchar(255) not null,
 	   FOREIGN KEY (post_id) REFERENCES post(id),

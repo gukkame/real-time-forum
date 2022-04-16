@@ -45,7 +45,7 @@ let c = checkCookie();
 
 <script>
 import axios from "axios";
-import { getCookie } from "../../cookie";
+import { getCookie, getAge } from "../../cookie";
 
 export default {
   data() {
@@ -82,16 +82,4 @@ export default {
     });
   },
 };
-
-function getAge(dateString) {
-  dateString = dateString.toString();
-  var today = new Date();
-  var birthDate = new Date(dateString);
-  var age = today.getFullYear() - birthDate.getFullYear();
-  var m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}
 </script>

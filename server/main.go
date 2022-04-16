@@ -8,6 +8,10 @@ import (
 func main() {
 	// databaseStart()
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/home/posts", posts)
+	http.HandleFunc("/home/singlepost", singlepostcom)
+	http.HandleFunc("/home/newcomment", newcomment)
+	http.HandleFunc("/newpost", newpost)
 	http.HandleFunc("/signup", signup)
 	http.HandleFunc("/profile", profile)
 	fmt.Println("Server is running")

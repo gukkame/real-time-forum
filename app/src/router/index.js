@@ -43,6 +43,11 @@ const router = createRouter({
       component: () => import('../views/nft.vue')
     },
     {
+      path: '/home/newpost',
+      name: 'newpost',
+      component: () => import('../views/newpost.vue')
+    },
+    {
       path: '/home/nftgames',
       name: 'nftgames',
       component: () => import('../views/nftgames.vue')
@@ -61,7 +66,12 @@ const router = createRouter({
       path: '/home/web3',
       name: 'web3',
       component: () => import('../views/web3.vue')
-    }
+    },
+    {
+      path: '/home/:category/:postid',
+      name: 'post',
+      component: () => import('../views/post.vue')
+    },
   ]
 })
 

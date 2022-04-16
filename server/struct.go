@@ -22,14 +22,6 @@ type likedposts struct {
 	Title  string
 }
 
-type post struct {
-	ID       int
-	Title    string
-	Content  string
-	Created  string
-	Username string
-}
-
 type allpost struct {
 	Post     []post
 	Category []category
@@ -60,12 +52,6 @@ type postlike struct {
 type commentlike struct {
 	Like    int
 	Dislike int
-}
-type comment struct {
-	ComID    string
-	ID       int
-	Content  string
-	Username string
 }
 type comarr struct {
 	Comment []comment

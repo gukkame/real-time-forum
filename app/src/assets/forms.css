@@ -1,4 +1,4 @@
-.center {
+  .center {
     margin: 150px auto;
     width: 400px;
     background: white;
@@ -18,7 +18,7 @@
   form .txt_field {
     position: relative;
     border-bottom: 2px solid #adadad;
-    margin: 30px 0;
+    margin: 20px 0;
   }
   form .txt_field1 {
     position: relative;
@@ -29,7 +29,8 @@
     width: 100%;
     padding: 0 5px;
     height: 40px;
-    font-size: 16px;
+    color: #2e2e2e;
+    font-size: 15px;
     border: none;
     background: none;
     outline: none;
@@ -74,10 +75,9 @@
   }
 
   .radiobtn{
-    
     color: #181818;
     font-size: 16px;
-    margin: 0px 0px;
+    margin: -10px 0px;
   }
   .submitbutton {
     margin: 0px 30px;
@@ -111,11 +111,9 @@
   .signup_link a:hover {
     text-decoration: underline;
   }
-  
+  .formdate input{
+  font-size: 17px;
+  margin: 0px 0;
+  }
   @media (min-width: 1024px) {
-    .about1 {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-    }
   }

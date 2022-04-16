@@ -8,24 +8,19 @@
           <span></span>
           <label>Username</label>
         </div>
-        <div class="txt_field1">
-          <br />
+        <div class="txt_field">
           <label>Age</label>
-        </div>
-        <div>
-          <input
-            style="font-size: 20px; margin-bottom: 20px"
-            type="date"
-            v-model="age"
-            required
-          />
           <br />
         </div>
-        <div class="txt_field1">
+        <div class="formdate">
+          <input type="date" v-model="age" required />
+          <br />
+        </div>
+        <div class="txt_field">
           <br />
           <label>Gender</label>
         </div>
-        <div class="radiobtn" style="margin: 0 0">
+        <div class="radiobtn">
           <input type="radio" id="female" value="female" v-model="gender" />
           <label for="female">Female</label> &nbsp; &nbsp;
           <input type="radio" id="male" value="male" v-model="gender" />
@@ -36,7 +31,7 @@
             value="no_gender"
             v-model="gender"
           />
-          <label for="no_gender">No gender</label>
+          <label for="no_gender">No gender</label>&nbsp; &nbsp;
         </div>
         <div class="txt_field">
           <input name="firstname" v-model="firstname" type="text" required />
@@ -75,7 +70,7 @@
       </div>
       &nbsp;
       <div>
-        <p style="color: black">{{ msg }}</p>
+        <p style="color: black">&nbsp;{{ msg }}</p>
       </div>
       <div class="signup_link">
         Do you have account already? Then
@@ -97,10 +92,10 @@ export default {
     //data that will be displayed in page
     return {
       username: "",
-      gender: "female",
+      gender: "",
       firstname: "",
       lastname: "",
-      age: dateToString(new Date()),
+      age: "",
       email: "",
       password: "",
       msg: "",
@@ -125,6 +120,8 @@ export default {
         this.firstname != "" &&
         this.lastname != "" &&
         this.email != "" &&
+        this.age != "" &&
+        this.gender != "" &&
         this.password != ""
       ) {
         axios({

@@ -30,4 +30,5 @@ let c = checkCookie();
 @import "@/assets/app.css";
 @import "@/assets/forms.css";
 @import "@/assets/profile.css";
+@import "@/assets/posts.css";
 </style>

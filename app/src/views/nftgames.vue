@@ -1,5 +1,6 @@
 <script setup>
 import { checkCookie } from "../../cookie";
+import Posts from "../components/posts.vue";
 checkCookie();
 </script>
 <template>
@@ -13,5 +14,22 @@ checkCookie();
       <RouterLink to="/home/web3">Web 3.0</RouterLink>
     </nav>
   </div>
+  <Posts :pageCategory="pageCategory" />
   <RouterView />
 </template> 
+<script>
+export default {
+  components: {
+    Posts,
+  },
+  data() {
+    return {
+      pageCategory: this.pageCategory,
+    };
+  },
+  created() {
+    let pageCategory = window.location.pathname.split("/");
+    this.pageCategory = pageCategory[2];
+  },
+};
+</script>

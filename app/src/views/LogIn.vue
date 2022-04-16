@@ -11,7 +11,7 @@ let c = checkCookie();
         Go back to <RouterLink to="/">Home page</RouterLink>
       </div>
     </div>
-    
+
     <div class="center" v-else>
       <h1>Login</h1>
       <form>
@@ -35,7 +35,7 @@ let c = checkCookie();
       &nbsp;
 
       <div>
-        <p style="color: black">{{ msg }}</p>
+        <p style="color: black">&nbsp; {{ msg }}</p>
       </div>
       <div class="signup_link">
         Not a member? <RouterLink to="/signup">SignUp</RouterLink>
