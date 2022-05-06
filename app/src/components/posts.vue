@@ -69,6 +69,7 @@ export default {
   computed: {
     allposts: function () {
       console.log("pageCategory", this.pageCategory);
+
       return this.result.filter((post) => post.category == this.pageCategory);
     },
   },
@@ -92,6 +93,7 @@ export default {
       this.username = res.data["username"];
       this.result = res.data;
       console.log(this.result);
+      console.log("pageCategory", this.created);
     });
   },
 };

@@ -4,9 +4,14 @@
       <h1>Sign up</h1>
       <form>
         <div class="txt_field">
-          <input name="username" v-model="username" type="text" required />
+          <input
+            name="username"
+            v-model="username"
+            type="text"
+            placeholder="User Name"
+            required
+          />
           <span></span>
-          <label>Username</label>
         </div>
         <div class="txt_field">
           <label>Age</label>
@@ -34,24 +39,39 @@
           <label for="no_gender">No gender</label>&nbsp; &nbsp;
         </div>
         <div class="txt_field">
-          <input name="firstname" v-model="firstname" type="text" required />
+          <input
+            name="firstname"
+            v-model="firstname"
+            type="text"
+            placeholder="First Name"
+            required
+          />
           <span></span>
-          <label>Firstname</label>
         </div>
         <div class="txt_field">
-          <input name="lastname" v-model="lastname" type="text" required />
+          <input
+            name="lastname"
+            v-model="lastname"
+            type="text"
+            placeholder="Lastname"
+            required
+          />
           <span></span>
-          <label>Lastname</label>
+        </div>
+        <div :class="['input-group', isEmailValid()]" class="txt_field">
+          <!-- <input name="email" v-model="email" type="text" required /> -->
+          <input type="email" placeholder="Email Address" v-model="email" />
+          <span></span>
         </div>
         <div class="txt_field">
-          <input name="email" v-model="email" type="text" required />
+          <input
+            name="password"
+            v-model="password"
+            type="password"
+            placeholder="Password"
+            required
+          />
           <span></span>
-          <label>Email</label>
-        </div>
-        <div class="txt_field">
-          <input name="password" v-model="password" type="password" required />
-          <span></span>
-          <label>Password</label>
         </div>
       </form>
 
@@ -97,12 +117,22 @@ export default {
       lastname: "",
       age: "",
       email: "",
+      isValid: "",
+      reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       password: "",
       msg: "",
     };
   },
 
   methods: {
+    isEmailValid() {
+      return this.email == ""
+        ? ""
+        : this.reg.test(this.email)
+        ? (this.isValid = true)
+        : (this.msg = "email is incorect");
+    },
+
     postreq: function () {
       //data we are sending
       var data = {
@@ -122,7 +152,8 @@ export default {
         this.email != "" &&
         this.age != "" &&
         this.gender != "" &&
-        this.password != ""
+        this.password != "" &&
+        this.isValid == true
       ) {
         axios({
           method: "POST",
@@ -134,8 +165,8 @@ export default {
             //data we receive
             this.msg = result.data["msg"];
             this.flag = result.data["check"];
-            console.log("result4 ", result.data);
             if (this.flag == true) {
+              console.log("Data Sended ", result.data);
               setTimeout(() => this.$router.push({ path: "/" }), 2000);
             }
           })

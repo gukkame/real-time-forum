@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -30,11 +29,9 @@ func newpost(w http.ResponseWriter, request *http.Request) {
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
-	check := userCheck(db, newpostdata.Username, newpostdata.Cookie)
+	check := userCheck(newpostdata.Username, newpostdata.Cookie)
 
 	time := time.Now()
-	fmt.Println(time)
-	fmt.Println(check)
 
 	if check && newpostdata.Title != "" && newpostdata.Content != "" && newpostdata.Category != "" {
 

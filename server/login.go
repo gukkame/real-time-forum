@@ -13,7 +13,6 @@ import (
 type loginDataRes struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Time     string `json:"date"`
 }
 
 type loginDataSend struct {
@@ -52,11 +51,11 @@ func login(w http.ResponseWriter, req *http.Request) {
 			loginDataSend.Msg = "Correct"
 			loginDataSend.Check = true
 			sID := uuid.NewV4()
-			loginDataSend.Value = sID.String()
+			loginDataSend.Value = sID.String() + ":" + loginDataRes.Username
 			loginDataSend.MaxAge = 3 * 60
 
 			// adds user to database
-			updateSession(db, loginDataSend.Value, loginDataRes.Username, loginDataRes.Time)
+			updateSession(db, sID.String(), loginDataRes.Username)
 
 		}
 	}

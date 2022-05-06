@@ -68,7 +68,6 @@ export default {
       var data = {
         username: this.username,
         password: this.password,
-        date: this.date,
       };
 
       axios({
@@ -88,8 +87,7 @@ export default {
 
           if (this.check == true) {
             document.cookie =
-              this.username +
-              "=" +
+              "session=" +
               this.value +
               ";" +
               "max-age=" +

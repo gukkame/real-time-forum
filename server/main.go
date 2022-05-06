@@ -7,6 +7,7 @@ import (
 
 func main() {
 	// databaseStart()
+	http.HandleFunc("/socket", WsEndpoint)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/home/posts", posts)
 	http.HandleFunc("/home/singlepost", singlepostcom)
@@ -24,3 +25,5 @@ func checkErr(err error) {
 		panic(err)
 	}
 }
+
+

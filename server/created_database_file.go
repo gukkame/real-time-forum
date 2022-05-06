@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"log"
-	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -13,11 +12,11 @@ func databaseStart() {
 	// os.Remove("./DataBase/forum.db")
 	log.Println("Creating sqlite-database.db...")
 
-	file, err := os.Create("./Database/forum.db") // Create SQLite file
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	file.Close()
+	// file, err := os.Create("./Database/forum.db") // Create SQLite file
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+	// file.Close()
 
 	log.Println("forum.db created")
 
@@ -26,13 +25,13 @@ func databaseStart() {
 		// log.Fatal(err)
 		checkErr(err)
 	}
-	createUserAcc(dbConn)
-	createSession(dbConn)
-	createPost(dbConn)
-	createCategoryPost(dbConn)
-	createComment(dbConn)
-	createReactionPost(dbConn)
-	createReactionComment(dbConn)
+	// createUserAcc(dbConn)
+	// createSession(dbConn)
+	// createPost(dbConn)
+	// createCategoryPost(dbConn)
+	// createComment(dbConn)
+	// createReactionPost(dbConn)
+	// messages(dbConn)
 	defer dbConn.Close() // Defer Closing the database
 }
 
@@ -103,6 +102,7 @@ func createComment(dbConn *sql.DB) {
 		content  text not null,
 	   post_id integer not null,
 	   user_name varchar(255) not null,
+	   created  datetime not null DEFAULT CURRENT_TIMESTAMP,
 	   FOREIGN KEY (post_id) REFERENCES post(id),
 	   FOREIGN KEY (user_name) REFERENCES user_account(user_name)
 	 )
@@ -110,35 +110,48 @@ func createComment(dbConn *sql.DB) {
 	checkErr(err)
 	statement.Exec()
 }
-
-func createReactionPost(dbConn *sql.DB) {
+func messages(dbConn *sql.DB) {
 	statement, err := dbConn.Prepare(`
-	CREATE TABLE  reaction_post  (
-		emotion integer not null,
-	   post_id integer not null,
-	   user_name varchar(255) not null,
-	 PRIMARY KEY (post_id, user_name)
-	   FOREIGN KEY (post_id) REFERENCES post(id),
-	   FOREIGN KEY (user_name) REFERENCES user_account(user_name)
+	CREATE TABLE messages  (
+		id  integer not null PRIMARY KEY AUTOINCREMENT,
+	 	content  text not null,
+		created  datetime not null DEFAULT CURRENT_TIMESTAMP,
+	   	user_1 varchar(255) not null,
+	  	user_2 varchar(255) not null
 	 )
-	 
-		`)
+	 `)
 	checkErr(err)
 	statement.Exec()
 }
 
-func createReactionComment(dbConn *sql.DB) {
-	statement, err := dbConn.Prepare(`
-	CREATE TABLE  reaction_comment  (
-		emotion integer not null,
-		comment_id integer not null,
-		user_name varchar(255) not null,
-	  PRIMARY KEY (comment_id, user_name)
-		FOREIGN KEY (comment_id) REFERENCES comment(id),
-		FOREIGN KEY (user_name) REFERENCES user_account(user_name)
-	  )
-	  
-		`)
-	checkErr(err)
-	statement.Exec()
-}
+// func createReactionPost(dbConn *sql.DB) {
+// 	statement, err := dbConn.Prepare(`
+// 	CREATE TABLE  reaction_post  (
+// 		emotion integer not null,
+// 	   post_id integer not null,
+// 	   user_name varchar(255) not null,
+// 	 PRIMARY KEY (post_id, user_name)
+// 	   FOREIGN KEY (post_id) REFERENCES post(id),
+// 	   FOREIGN KEY (user_name) REFERENCES user_account(user_name)
+// 	 )
+
+// 		`)
+// 	checkErr(err)
+// 	statement.Exec()
+// }
+
+// func createReactionComment(dbConn *sql.DB) {
+// 	statement, err := dbConn.Prepare(`
+// 	CREATE TABLE  reaction_comment  (
+// 		emotion integer not null,
+// 		comment_id integer not null,
+// 		user_name varchar(255) not null,
+// 	  PRIMARY KEY (comment_id, user_name)
+// 		FOREIGN KEY (comment_id) REFERENCES comment(id),
+// 		FOREIGN KEY (user_name) REFERENCES user_account(user_name)
+// 	  )
+
+// 		`)
+// 	checkErr(err)
+// 	statement.Exec()
+// }

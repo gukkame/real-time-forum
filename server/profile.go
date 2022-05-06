@@ -22,7 +22,7 @@ func profile(w http.ResponseWriter, req *http.Request) {
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
-	check := userCheck(db, cookieData.Username, cookieData.Cookie)
+	check := userCheck(cookieData.Username, cookieData.Cookie)
 
 	if check {
 		//search at database if user already exists with this username or email

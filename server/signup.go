@@ -40,7 +40,6 @@ func signup(w http.ResponseWriter, request *http.Request) {
 
 	//search at database if user already exists with this username or email
 	people := searchForUser(db, sigupData.Username, sigupData.Email)
-	fmt.Printf("Found %v results\n", len(people))
 
 	if len(people) == 0 {
 		hashedpass, err := bcrypt.GenerateFromPassword([]byte(sigupData.Password), bcrypt.MinCost)
@@ -53,11 +52,12 @@ func signup(w http.ResponseWriter, request *http.Request) {
 		stmt.Exec(sigupData.Username, sigupData.Age, sigupData.Gender, sigupData.Firstname, sigupData.Lastname, sigupData.Email, hashedpass)
 		msg.Msg = "User successfuly created"
 		msg.Check = true
+
+		fmt.Println("User successfuly created")
 	} else {
 		msg.Msg = "User with this email or username already exist"
 		msg.Check = false
 	}
-
 	defer db.Close()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

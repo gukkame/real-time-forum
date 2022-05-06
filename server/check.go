@@ -22,6 +22,7 @@ func getAllPosts(db *sql.DB) []post {
 		onePost.Created = time
 		postinfo = append(postinfo, onePost)
 	}
+	
 	return postinfo
 }
 func getComments(db *sql.DB, postid int) []comment {

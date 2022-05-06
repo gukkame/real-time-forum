@@ -11,7 +11,7 @@ type post struct {
 	ID       int    `json:"id"`
 	Title    string `json:"title"`
 	Content  string `json:"content"`
-	Created  string `json:"postcreated"`
+	Created  string `json:"created"`
 	Category string `json:"category"`
 	Username string `json:"username"`
 }
@@ -27,7 +27,7 @@ func posts(w http.ResponseWriter, req *http.Request) {
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
-	check := userCheck(db, cookieData.Username, cookieData.Cookie)
+	check := userCheck(cookieData.Username, cookieData.Cookie)
 
 	fmt.Println("cookie check ", check)
 

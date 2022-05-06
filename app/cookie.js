@@ -1,8 +1,13 @@
 function getCookie() {
     var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    var ca1 = ca[0].split('=');
-    return ca1;
+    if (decodedCookie != "") {
+        var ca = decodedCookie.split(';');
+        var ca1 = ca[0].split('=');
+        var ca2 = ca1[1].split(':');
+        ca2.reverse()
+        return ca2;
+    }
+    return []
 }
 
 //checks cookie and updates it
@@ -14,17 +19,16 @@ function checkCookie() {
 
     } else {
         document.cookie =
-            cookie[0] + "=" + cookie[1] + ";" + "max-age=" + 20 * 60 + ";path=/";
+            "session=" + cookie[1] + ":" + cookie[0] + ";" + "max-age=" + 20 * 60 + ";path=/";
         cookieCheck = true;
     }
-
     // console.log(cookieCheck);
-
     return cookieCheck
 }
 
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999;';
+function removeCookie(value) {
+    document.cookie = 'session=' + value + '; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    console.log("donee");
 }
 
 function dateToString(date) {

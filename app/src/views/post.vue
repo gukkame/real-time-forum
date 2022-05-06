@@ -4,9 +4,8 @@ let cookie = checkCookie();
 </script>
 <template>
   <body>
-    <h1>Single Post page</h1>
-    <div>This is Bar {{ $route.params.postid }}</div>
-
+    <br />
+    <br />
     <div v-for="post in allposts" :key="post._id">
       <div class="post">
         <div class="user">
@@ -17,7 +16,7 @@ let cookie = checkCookie();
           <h2>{{ post.title }}</h2>
           <p>{{ post.content }}</p>
         </div>
-        <div class="created">{{ post.postcreated }}</div>
+        <div class="created">{{ post.created }}</div>
       </div>
     </div>
     <!-- <Comments /> -->
@@ -51,7 +50,6 @@ let cookie = checkCookie();
             />
             <span></span>
             <label>Write your comment here... </label>
-            
           </div>
         </form>
 
@@ -60,7 +58,13 @@ let cookie = checkCookie();
             Add comment
           </button>
         </div>
-        <h3 style="color: red;   text-align: center;">{{ msg }}</h3>
+        <h3 style="color: red; text-align: center">{{ msg }}</h3>
+      </div>
+      <div class="signup_link" v-else>
+        <h4>
+          Please <RouterLink to="/login">Log In </RouterLink>or
+          <RouterLink to="/signup">Sign Up</RouterLink> to add comments!
+        </h4>
       </div>
     </div>
   </body>
@@ -130,7 +134,7 @@ export default {
       //   this.title = res.data["postid"];
       this.com_username = response.data["username"];
       this.com_result = response.data;
-      console.log("ssxxxs ", this.com_result);
+      // console.log("ssxxxs ", this.com_result);
     });
   },
   methods: {
@@ -142,9 +146,9 @@ export default {
         username: cookie[0],
         cookie: cookie[1],
       };
-      console.log("all data from form", data);
-      console.log("all data from form", typeof this.postid);
-      console.log("all data from form", cookie[0]);
+      // console.log("all data from form", data);
+      // console.log("all data from form", typeof this.postid);
+      // console.log("all data from form", cookie[0]);
       if (this.comContent != "" && cookie[0] != "") {
         axios({
           method: "POST",

@@ -28,7 +28,7 @@ func newcomment(w http.ResponseWriter, request *http.Request) {
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
-	check := userCheck(db, newcomdata.Username, newcomdata.Cookie)
+	check := userCheck(newcomdata.Username, newcomdata.Cookie)
 
 	fmt.Println(check)
 

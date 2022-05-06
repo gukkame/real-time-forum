@@ -1,11 +1,11 @@
 <script setup>
 import { checkCookie } from "../../cookie";
-let c = checkCookie();
+let cookie = checkCookie();
 </script>
 
 <template>
   <div>
-    <div class="profile" v-if="c">
+    <div class="profile" v-if="cookie">
       <h1>Profile page!</h1>
 
       <table>

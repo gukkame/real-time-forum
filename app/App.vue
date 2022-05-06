@@ -1,7 +1,7 @@
 <script setup>
-// import { getCookie } from "./cookie";
 import { checkCookie } from "./cookie";
-let c = checkCookie();
+import Chat from "./src/components/chat.vue";
+let cookie = checkCookie();
 </script>
 
 <template>
@@ -10,7 +10,7 @@ let c = checkCookie();
       <RouterLink to="/home">Home</RouterLink>
       <h2>Forum &nbsp;</h2>
     </div>
-    <div class="button1" v-if="c">
+    <div v-if="cookie">
       <RouterLink to="/logout">&nbsp;Log out</RouterLink>
       <RouterLink to="/profile">&nbsp; Profile &nbsp;</RouterLink>
     </div>
@@ -20,9 +20,15 @@ let c = checkCookie();
     </div>
   </nav>
   <RouterView />
+  <Chat v-if="cookie" />
 </template>
 
 <script>
+export default {
+  components: {
+    Chat,
+  },
+};
 </script>
 
 <style>

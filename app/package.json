@@ -10,10 +10,13 @@
   "dependencies": {
     "axios": "^0.26.1",
     "formvuelate": "^3.8.1",
+    "lodash": "^4.17.21",
     "vee-validate": "^4.5.10",
     "vue": "^3.2.31",
     "vue-cookies": "^1.7.4",
+    "vue-lodash": "^2.1.2",
     "vue-router": "^4.0.14",
+    "vue-toast-notification": "^3.0.1",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0"
   },
