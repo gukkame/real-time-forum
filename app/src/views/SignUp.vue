@@ -74,14 +74,6 @@
           <span></span>
         </div>
       </form>
-
-      <!-- <div>
-        <p style="color: black">Add: {{ add13 }}</p>
-      </div>
-      <div>
-        <p style="color: black">Multiplication: {{ multi }}</p>
-      </div> -->
-
       &nbsp;
       <div class="submitbutton">
         <button class="submit-btn" variant="primary" v-on:click="postreq()">

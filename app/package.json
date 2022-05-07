@@ -16,7 +16,6 @@
     "vue-cookies": "^1.7.4",
     "vue-lodash": "^2.1.2",
     "vue-router": "^4.0.14",
-    "vue-toast-notification": "^3.0.1",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0"
   },

@@ -131,10 +131,8 @@ export default {
     }).then((response) => {
       this.com_id = response.data["id"];
       this.com_content = response.data["content"];
-      //   this.title = res.data["postid"];
       this.com_username = response.data["username"];
       this.com_result = response.data;
-      // console.log("ssxxxs ", this.com_result);
     });
   },
   methods: {
@@ -157,10 +155,8 @@ export default {
             //data we receive
             this.msg = result.data["msg"];
             this.flag = result.data["check"];
-            console.log("result4 ", result.data);
 
             if (this.flag == true) {
-              console.log("restart", window.location.pathname);
               window.location.reload();
             }
           })

@@ -18,8 +18,6 @@ let c = checkCookie();
             type="text"
             required
           />
-          <span></span>
-          <!-- <label>Title</label> -->
         </div>
     
         <div class="txt_field">

@@ -22,7 +22,6 @@ function checkCookie() {
             "session=" + cookie[1] + ":" + cookie[0] + ";" + "max-age=" + 20 * 60 + ";path=/";
         cookieCheck = true;
     }
-    // console.log(cookieCheck);
     return cookieCheck
 }
 
@@ -51,7 +50,6 @@ function pad(n, s = String(n)) {
 }
 
 function getAge(dateString) {
-    console.log("date ", dateString);
     dateString = dateString.toString();
     var today = new Date();
     var birthDate = new Date(dateString);
