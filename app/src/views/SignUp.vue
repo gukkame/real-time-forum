@@ -129,7 +129,7 @@ export default {
       return this.email == ""
         ? ""
         : this.reg.test(this.email)
-        ? (this.isValid = true)
+        ? ((this.isValid = true), (this.msg = ""))
         : (this.msg = "email is incorect");
     },
 

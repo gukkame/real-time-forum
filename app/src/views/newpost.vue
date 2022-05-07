@@ -10,13 +10,9 @@ let c = checkCookie();
           
         <h2 style="color: red;   text-align: center;">{{ msg }}</h2>
 
-        <div class="txt_field1">
-          <br />
-          <label>Title</label>
-        </div>
-        <div class="txt_field1">
+        <div class="txt_field">
           <input
-            placeholder="Write title here"
+            placeholder="Title"
             name="title"
             v-model="title"
             type="text"
@@ -25,14 +21,10 @@ let c = checkCookie();
           <span></span>
           <!-- <label>Title</label> -->
         </div>
-        <br />
-        <div class="txt_field1">
-          <br />
-          <label>Content</label>
-        </div>
-        <div class="txt_field1">
+    
+        <div class="txt_field">
           <textarea
-            placeholder="Content for post..."
+            placeholder="Content"
             v-model="content"
             type="text"
             required

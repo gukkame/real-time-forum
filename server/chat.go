@@ -15,6 +15,7 @@ type RecievedData struct {
 	SessionId string `json:"sessionID"`
 	User1     string `json:"user1"`
 	User2     string `json:"user2"`
+	Number    int    `json:"number"`
 }
 type SendMsg struct {
 	Content  string `json:"content"`
@@ -34,7 +35,7 @@ type UsersOnline struct {
 	Username string
 	Conn     *websocket.Conn
 	LastMsg  string
-	NoMsg    string
+
 }
 type AllUsersOnline struct {
 	Allusers []UsersOnline `json:"allUsers"`
@@ -52,6 +53,7 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	var username string
 	var activechatUsers []string
+
 	reqHeader := r.Header.Get("Cookie")
 	if reqHeader != "" {
 		splitToken := strings.Split(reqHeader, "session=")
@@ -64,7 +66,6 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 	useronline := UsersOnline{Username: username, Conn: wsConn}
 
-	// event loop
 	if reqHeader != "" {
 		check := false
 		for _, user := range allUsersOnline {
@@ -75,12 +76,9 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 		if !check {
 			allUsersOnline = append(allUsersOnline, useronline)
 		}
-		// SendAllUsers(AllUsersOnline{allUsersOnline}, wsConn)
 	}
 	go func() {
 		for {
-			// var sendMsgUsers AllUsersOnline
-
 			var msg RecievedData
 
 			err := wsConn.ReadJSON(&msg)
@@ -89,22 +87,17 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 			//Get Message history from database
 			if msg.Content == "getUserList" {
 				lastMsg := getLastMsg(username, allUsersOnline)
-
 				var user UsersOnline
 				var users []UsersOnline
 				count := 0
 				for i, user2 := range allUsersOnline {
 					if username != user2.Username {
-
 						user.Username = user2.Username
 						user.Conn = user2.Conn
-						if lastMsg[i-count] == "0" {
-							user.NoMsg = "0"
+						if lastMsg[i-count] == "0" {		
 							user.LastMsg = ""
 						} else {
-
 							user.LastMsg = lastMsg[i-count]
-							user.NoMsg = ""
 						}
 						users = append(users, user)
 					} else {
@@ -113,17 +106,18 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 				}
 				sendAllUsers(AllUsersOnline{Allusers: users}, wsConn)
 			}
+			//Chat closes
 			if msg.Content == "chatCloses" {
 				for _, user := range activechatUsers {
 					if user == msg.User2 {
-						// activechatUsers = append(activechatUsers[:i], activechatUsers[i+1:]...)
 						activechatUsers = []string{}
 					}
 				}
 			}
+
+			//Check if user session_id matches with DB session_id
 			if msg.Content == "check" {
 				check := userCheck(msg.User1, msg.SessionId)
-				fmt.Println("User check!", check)
 				if !check {
 					sendCheck(message{Msg: "SessionIDs does not match", Check: false}, wsConn)
 				} else {
@@ -135,7 +129,6 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 			if msg.Content != "" && msg.SessionId != "" && msg.User1 != "" && msg.User2 != "" {
 				var conn2 *websocket.Conn
 				for _, user := range allUsersOnline {
-					fmt.Println("Save Message! ", user)
 					if user.Username == msg.User2 {
 						conn2 = user.Conn
 					}
@@ -143,16 +136,25 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 				saveMessage(msg, conn2)
 				sendMessage(msg, wsConn, conn2)
 				fmt.Println("Save Message! ")
-
+				fmt.Println()
 			}
+			//Send message history
 			if msg.Content == "" && msg.SessionId == "" && msg.User1 == "" && msg.User2 != "" {
-				activechatUsers = append(activechatUsers, msg.User2)
-				sendMessageHistory(username, wsConn, activechatUsers)
+				i := 0
+				for _, user := range activechatUsers {
+					if user == msg.User2 {
+						i++
+					}
+				}
+				if i == 0 {
+					activechatUsers = append(activechatUsers, msg.User2)
+				}
+				sendMessageHistory(username, msg.Number, wsConn, activechatUsers)
 				fmt.Println("Send message history!")
 				fmt.Println("Active Chats\n ", activechatUsers)
 				fmt.Println()
 			}
-
+			//when websocket closes, removes user from list
 			if err != nil {
 				for i, userOnline := range allUsersOnline {
 					if userOnline.Username == useronline.Username {
@@ -226,7 +228,7 @@ func saveMessage(data RecievedData, wsConn *websocket.Conn) {
 	var msg SendNotification
 	msg.Sender = data.User1
 	msg.Receiver = data.User2
-	fmt.Println("Msg notification: ", msg)
+	fmt.Println("Msg notification Sender, Receiver: ", msg)
 	err = wsConn.WriteJSON(msg)
 	if err != nil {
 		fmt.Printf("error sending message: %s\n", err.Error())
@@ -238,11 +240,13 @@ func sendMessage(data RecievedData, user1conn *websocket.Conn, user2conn *websoc
 	timenow := time.Now()
 	s := timenow.String()
 	fmt.Println(s)
-	created := timenow.Format("2006-01-02T15:04:05Z")
-	time := created[11:16]
-	msg = SendMsg{Content: data.Content, Sender: data.User1, Receiver: data.User2, Created: created, Date: "", Time: time}
+	timeformat := timenow.Format("2006-01-02T15:04:05Z")
+	created := timeformat[0:10]
+	time := timeformat[11:16]
+	//created == "" to display date only once a day before first message
+	msg = SendMsg{Content: data.Content, Sender: data.User1, Receiver: data.User2, Created: timeformat, Date: created, Time: time}
 
-	fmt.Println("msg sent back: ", msg)
+	fmt.Println("Msg sent back: ", msg)
 	err := user1conn.WriteJSON(msg)
 	if err != nil {
 		fmt.Printf("error sending message1: %s\n", err.Error())
@@ -253,19 +257,16 @@ func sendMessage(data RecievedData, user1conn *websocket.Conn, user2conn *websoc
 	}
 }
 
-var count = 1
-
-func sendMessageHistory(user1 string, wsConn *websocket.Conn, activeChatUsers []string) {
-
-	fmt.Println("User : ", user1)
+func sendMessageHistory(user1 string, msgDisplayed int, wsConn *websocket.Conn, activeChatUsers []string) {
 
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
 	var allMsg []SendMsg
+	var lastMsg []SendMsg
 	// var usr2 []SendMsg
 	for _, user2 := range activeChatUsers {
-		fmt.Println("User2(receiver) : ", user2)
+		// fmt.Println("User2(receiver) : ", user2)
 		rows, err := db.Query("SELECT content, created, user_1, user_2 FROM messages WHERE user_1 = ? AND user_2 = ? OR user_1 = ? AND user_2 = ?", user1, user2, user2, user1)
 		if err != nil {
 			checkErr(err)
@@ -278,19 +279,24 @@ func sendMessageHistory(user1 string, wsConn *websocket.Conn, activeChatUsers []
 			oneMsg.Time = oneMsg.Created[11:16]
 			allMsg = append(allMsg, oneMsg)
 		}
-		var lastMsg []SendMsg
-		for i := 1; i <= count; i++ {
-			calc := len(allMsg) - i*10
-			if calc > 0 {
+
+		if len(allMsg) <= 10 {
+			lastMsg = allMsg
+			wsConn.WriteJSON(lastMsg)
+		} else if msgDisplayed <= len(allMsg) {
+			if len(allMsg)/10 == (msgDisplayed / 10) {
+				lastMsg = allMsg
+				wsConn.WriteJSON(lastMsg)
+			} else {
+				calc := len(allMsg) - (msgDisplayed + 10)
 				lastMsg = allMsg[calc:]
-
-				err = wsConn.WriteJSON(lastMsg)
-				if err != nil {
-					fmt.Printf("error sending message: %s\n", err.Error())
-				}
-
+				wsConn.WriteJSON(lastMsg)
 			}
+
+		}
+		if err != nil {
+			fmt.Printf("error sending message: %s\n", err.Error())
 		}
 	}
-	count++
+
 }

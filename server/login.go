@@ -38,7 +38,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
-	people := searchForUser(db, loginDataRes.Username, loginDataRes.Username)
+	people := searchForUser(db, loginDataRes.Username)
 	fmt.Printf("Found %v results\n", len(people))
 	if len(people) == 0 {
 		loginDataSend.Msg = "This user does not exist"
@@ -54,7 +54,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 			loginDataSend.Value = sID.String() + ":" + loginDataRes.Username
 			loginDataSend.MaxAge = 3 * 60
 
-			// adds user to database
+			// adds user to database and updates session
 			updateSession(db, sID.String(), loginDataRes.Username)
 
 		}

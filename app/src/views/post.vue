@@ -43,13 +43,13 @@ let cookie = checkCookie();
         <form class="newpostform">
           <div class="txt_field">
             <input
+              v-on:keyup.enter="postreq()"
+              placeholder="Write your comment here..."
               name="comContent"
               v-model="comContent"
               type="text"
               required
             />
-            <span></span>
-            <label>Write your comment here... </label>
           </div>
         </form>
 
@@ -146,9 +146,6 @@ export default {
         username: cookie[0],
         cookie: cookie[1],
       };
-      // console.log("all data from form", data);
-      // console.log("all data from form", typeof this.postid);
-      // console.log("all data from form", cookie[0]);
       if (this.comContent != "" && cookie[0] != "") {
         axios({
           method: "POST",

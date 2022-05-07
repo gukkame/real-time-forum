@@ -23,18 +23,17 @@ func newcomment(w http.ResponseWriter, request *http.Request) {
 	//decoding recieved data
 	decoder.Decode(&newcomdata)
 
-	fmt.Println("newcoment data  ", newcomdata)
+	fmt.Println("Newcomment data:  ", newcomdata)
+	fmt.Println()
 
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
 	check := userCheck(newcomdata.Username, newcomdata.Cookie)
 
-	fmt.Println(check)
-
 	if check && newcomdata.Content != "" && newcomdata.Username != "" && newcomdata.PostId != 0 {
 
-		stmt, err := db.Prepare("INSERT INTO comment(content,  post_id, user_name) values(?,?,?)")
+		stmt, err := db.Prepare(`INSERT INTO comment(content,  post_id, user_name, created) values(?,?,?,datetime("now"))`)
 		checkErr(err)
 
 		// adds user to database

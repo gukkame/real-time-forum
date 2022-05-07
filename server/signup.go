@@ -39,7 +39,7 @@ func signup(w http.ResponseWriter, request *http.Request) {
 	checkErr(err)
 
 	//search at database if user already exists with this username or email
-	people := searchForUser(db, sigupData.Username, sigupData.Email)
+	people := searchForUser(db, sigupData.Username)
 
 	if len(people) == 0 {
 		hashedpass, err := bcrypt.GenerateFromPassword([]byte(sigupData.Password), bcrypt.MinCost)

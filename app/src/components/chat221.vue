@@ -15,7 +15,7 @@ let cookie = checkCookie();
       {{ message }}
     </p>
 
-    <div v-for="user in allusers" :key="user._id">
+    <div v-for="user in alluse0rs" :key="user._id">
       {{ user.Username }}
     </div>
 

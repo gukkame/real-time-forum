@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -27,9 +26,8 @@ func posts(w http.ResponseWriter, req *http.Request) {
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
 
-	check := userCheck(cookieData.Username, cookieData.Cookie)
-
-	fmt.Println("cookie check ", check)
+	// check := userCheck(cookieData.Username, cookieData.Cookie)
+	// fmt.Println("cookie check ", check)
 
 	postdata = getAllPosts(db)
 

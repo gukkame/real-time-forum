@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -22,22 +21,21 @@ func getAllPosts(db *sql.DB) []post {
 		onePost.Created = time
 		postinfo = append(postinfo, onePost)
 	}
-	
+
 	return postinfo
 }
 func getComments(db *sql.DB, postid int) []comment {
-	rows, err := db.Query("SELECT id, content, post_id, user_name FROM comment WHERE post_id = ?", (postid))
+	rows, err := db.Query("SELECT id, content, post_id, user_name, created FROM comment WHERE post_id = ?", (postid))
 	checkErr(err)
 
 	allComments := make([]comment, 0)
 
 	for rows.Next() { //for loop through database table
 		onePost := comment{}
-		err = rows.Scan(&onePost.ID, &onePost.Content, &onePost.PostId, &onePost.Username)
+		err = rows.Scan(&onePost.ID, &onePost.Content, &onePost.PostId, &onePost.Username, &onePost.Created)
 		checkErr(err)
 		allComments = append(allComments, onePost)
 	}
-	fmt.Println(allComments)
 	return allComments
 }
 func getUserInfo(db *sql.DB, username string) []userData {
@@ -55,9 +53,9 @@ func getUserInfo(db *sql.DB, username string) []userData {
 	return userinfo
 }
 
-func searchForUser(db *sql.DB, searchUsername string, searchEmail string) []user {
+func searchForUser(db *sql.DB, searchUsername string) []user {
 
-	rows, err := db.Query("SELECT user_name, password, email FROM user_account WHERE user_name = ?", (searchUsername))
+	rows, err := db.Query("SELECT user_name, password, email FROM user_account WHERE user_name = ? OR email = ?", searchUsername, searchUsername)
 	checkErr(err)
 
 	err = rows.Err()
@@ -74,26 +72,6 @@ func searchForUser(db *sql.DB, searchUsername string, searchEmail string) []user
 		people = append(people, ourPerson)
 	}
 	err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	rows1, err := db.Query("SELECT user_name, password, email FROM user_account WHERE email = ?", (searchEmail))
-	checkErr(err)
-
-	err = rows1.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for rows1.Next() { //for loop through database table
-		ourPerson := user{}
-		err = rows1.Scan(&ourPerson.UserName, &ourPerson.Password, &ourPerson.Email)
-		checkErr(err)
-		people = append(people, ourPerson)
-	}
-
-	err = rows1.Err()
 	if err != nil {
 		log.Fatal(err)
 	}

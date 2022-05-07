@@ -15,7 +15,7 @@ func updateSession(db *sql.DB, session_id string, username string) {
 	}
 
 	if i > 0 {
-		stmt, err := db.Prepare("DELETE FROM session WHERE user_name=?")
+		stmt, err := db.Prepare("DELETE FROM session WHERE user_name = ?")
 		checkErr(err)
 		stmt.Exec(username)
 	}

@@ -29,6 +29,7 @@ let cookie = getCookie();
             >
               {{ msg.date }}
             </span>
+
             <div class="msg left-msg">
               <div
                 class="msg-img"
@@ -52,9 +53,7 @@ let cookie = getCookie();
                 class="msg-bubble"
                 v-if="msg.sender == cookie[0] && msg.receiver == user"
               >
-                <div class="msg-text">
-                  {{ msg.content }}
-                </div>
+                <div class="msg-text">{{ msg.content }}</div>
                 <div class="msg-info-time">{{ msg.time }}</div>
               </div>
             </div>
@@ -87,7 +86,7 @@ let cookie = getCookie();
         </form>
       </section>
     </div>
-
+    <!-- All Users panel-->
     <section id="mySidepanelUsers" class="allUsers">
       <button v-on:click="allUsers(), reqAllUsers()">
         <header class="msger-header">
@@ -117,11 +116,8 @@ let cookie = getCookie();
 
 
 <script>
-import { getCookie, removeCookie, checkCookie } from "../../cookie";
+import { getCookie, removeCookie } from "../../cookie";
 import _ from "lodash";
-import VueToast from "vue-toast-notification";
-// Import one of the available themes
-//import 'vue-toast-notification/dist/theme-default.css';
 import "vue-toast-notification/dist/theme-sugar.css";
 let cookie = getCookie();
 
@@ -153,8 +149,8 @@ export default {
         );
         let allUsersO = _.orderBy(
           filtered,
-          ["LastMsg", "NoMsg"],
-          ["asc", "desc"]
+          ["LastMsg", "Username"],
+          ["asc", "asc"]
         );
         return allUsersO;
       }
@@ -183,45 +179,43 @@ export default {
     this.socket.onmessage = (msg) => {
       let incomingData = JSON.parse(msg.data.toString());
 
-      if (Object.keys(incomingData)[0] == "sender") {
-        this.recNotification(incomingData);
-      }
-      if (Object.keys(incomingData)[0] == "content") {
-        this.displayIncomingMsg(incomingData);
-      }
-      if (Object.keys(incomingData)[0] == "allUsers") {
-        this.receivedAllUsers(incomingData);
-      }
-      if (Object.keys(incomingData)[0] == "msg") {
-        this.recCheckSession(incomingData);
-      }
-      if (Object.keys(incomingData)[0] == "0") {
-        this.receivedAllMsg(incomingData);
+      if (incomingData == undefined || incomingData == null) {
+        console.log("null!!!!");
+      } else {
+        if (Object.keys(incomingData)[0] == "sender") {
+          this.recNotification(incomingData);
+        }
+        if (Object.keys(incomingData)[0] == "content") {
+          this.displayIncomingMsg(incomingData);
+        }
+        if (Object.keys(incomingData)[0] == "allUsers") {
+          this.receivedAllUsers(incomingData);
+        }
+        if (Object.keys(incomingData)[0] == "msg") {
+          this.recCheckSession(incomingData);
+        }
+        if (Object.keys(incomingData)[0] == "0") {
+          this.receivedAllMsg(incomingData);
+        }
       }
     };
   },
 
   methods: {
     displayIncomingMsg(incomingData) {
-      // console.log("Recieved messages1 ", incomingData);
       if (
         document.getElementById("mySidepanel0") == null ||
         document.getElementById("mySidepanel0").style.height == "0px"
       ) {
-        console.log("closed!");
       } else {
-        // console.log("000000", this.allMsg);
         this.allMsg.push(incomingData);
-        // console.log("111111", this.allMsg);
-        console.log("opened!");
       }
     },
+    //Orders messages and remove date
     orderedMsg() {
       let lastdate = "";
       let user = [];
       let allMessages = _.orderBy(this.allMsg, "created");
-      // console.log("All Messages 44 ", allMessages);
-      // console.log("All Messages 44 ", this.allMsg);
       allMessages.forEach((msg, i) => {
         if (
           msg.date == lastdate &&
@@ -246,20 +240,19 @@ export default {
     },
     handleScroll(user) {
       var c = document.getElementById("chat0");
-      console.log("Offset", c.scrollTop);
-      console.log("Offset", user);
       if (c.scrollTop == 0) {
-        console.log("TOP of scroll");
         let msg = {
           user2: user,
           content: "",
+          number: this.allMsg.length,
         };
         this.socket.send(JSON.stringify(msg));
+        c.scrollTo(0, c.scrollHeight + 10);
       }
     },
     receivedAllUsers(incomingData) {
       this.allusers = incomingData.allUsers;
-      console.log("AllUsers ", incomingData.allUsers);
+      // console.log("AllUsers ", incomingData.allUsers);
     },
     receivedAllMsg(incomingData) {
       this.allMsg = incomingData;
@@ -273,9 +266,10 @@ export default {
       ) {
         alert("You have new message");
       }
-      var c = document.getElementById("chat0");
-      c.scrollTo(0, c.scrollHeight);
-      console.log("privatechats", this.privatechats);
+      if (document.getElementById("chat0") != null) {
+        var c = document.getElementById("chat0");
+        c.scrollTo(0, c.scrollHeight);
+      }
     },
 
     checkSession() {
@@ -286,10 +280,10 @@ export default {
           sessionID: cookie[1],
           user1: cookie[0],
         };
-        // console.log(status);
         this.socket.send(JSON.stringify(status));
       }
     },
+    //Check session if user is still active
     recCheckSession(incomingData) {
       let cookie = getCookie();
       this.message = incomingData;
@@ -297,19 +291,19 @@ export default {
         if (getCookie != []) {
           removeCookie(cookie[1]);
           // location.assign("/logout");
-          console.log("Loging you out");
+          // console.log("Loging you out");
         }
       }
     },
 
     //Opens private chat window
     privateChat(username) {
-      console.log(username);
-      console.log(cookie[0]);
       if (username != cookie[0]) {
         this.privatechats = username;
       }
+
       //For Multiple chat logs opened
+
       // let i = 0;
       // this.privatechats.forEach((element) => {
       //   if (username == element) {
@@ -319,20 +313,16 @@ export default {
       // if (i == 0 && username != cookie[0]) {
       //   this.privatechats.push(username);
       // }
-      console.log(this.privatechats);
     },
 
     sendMessage(user) {
-      //Working on
       let cookie = getCookie();
       let msg = {
         user1: cookie[0],
         user2: user,
         content: this.message,
         sessionID: cookie[1],
-        // status: navigator.onLine,
       };
-      console.log(msg);
       this.socket.send(JSON.stringify(msg));
       this.message = "";
       var c = document.getElementById("chat0");
@@ -363,9 +353,7 @@ export default {
       }
     },
     chat(userid, user2) {
-      console.log("username ", user2);
-
-      //when I press it opens
+      //When pressed Chat window opens
       if (
         document.getElementById("mySidepanel" + userid).style.height ==
           "40px" ||
@@ -375,7 +363,6 @@ export default {
           user2: user2,
           content: "",
         };
-        // console.log("MSG ", msg);
         this.socket.send(JSON.stringify(msg));
         document.getElementById("chat" + userid).style.display = "block";
         document.getElementById("chatform" + userid).style.display = "flex";
@@ -386,7 +373,6 @@ export default {
           user2: user2,
           content: "chatCloses",
         };
-        // console.log("MSG ", msg);
         this.socket.send(JSON.stringify(msg));
         document.getElementById("mySidepanel" + userid).style.height = "40px";
         document.getElementById("chat" + userid).style.display = "none";

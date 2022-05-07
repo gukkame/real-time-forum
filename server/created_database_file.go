@@ -3,20 +3,21 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func databaseStart() {
 
-	// os.Remove("./DataBase/forum.db")
+	os.Remove("./DataBase/forum.db")
 	log.Println("Creating sqlite-database.db...")
 
-	// file, err := os.Create("./Database/forum.db") // Create SQLite file
-	// if err != nil {
-	// 	log.Fatal(err.Error())
-	// }
-	// file.Close()
+	file, err := os.Create("./Database/forum.db") // Create SQLite file
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	file.Close()
 
 	log.Println("forum.db created")
 
@@ -25,13 +26,11 @@ func databaseStart() {
 		// log.Fatal(err)
 		checkErr(err)
 	}
-	// createUserAcc(dbConn)
-	// createSession(dbConn)
-	// createPost(dbConn)
-	// createCategoryPost(dbConn)
-	// createComment(dbConn)
-	// createReactionPost(dbConn)
-	// messages(dbConn)
+	createUserAcc(dbConn)
+	createSession(dbConn)
+	createPost(dbConn)
+	createComment(dbConn)
+	messages(dbConn)
 	defer dbConn.Close() // Defer Closing the database
 }
 
@@ -46,9 +45,15 @@ func createUserAcc(dbConn *sql.DB) {
 		email varchar(255) not null,
 		password varchar(255) not null
 		)
-		
 		`)
 	statement.Exec()
+
+	stmt, err := dbConn.Prepare(`INSERT INTO user_account(user_name, age, gender, firstname, lastname, email, password) VALUES(?, ?, ?, ?, ?, ?, ?)`)
+	if err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	stmt.Exec("User1", "2002-09-26", "female", "TestUserName", "TestLastName", "test@test.lv", "t")
 }
 func createSession(dbConn *sql.DB) {
 	statement, _ := dbConn.Prepare(`
@@ -78,21 +83,12 @@ func createPost(dbConn *sql.DB) {
 	checkErr(err)
 	statement.Exec()
 	// image blob null, add this if you wanna add picture to post
-}
-
-func createCategoryPost(dbConn *sql.DB) {
-	statement, err := dbConn.Prepare(`
-	CREATE TABLE  category_post  (
-		post_id integer not null ,
-		category_id integer not null,
-	   PRIMARY KEY ("post_id", "category_id"),
-	   FOREIGN KEY (post_id) REFERENCES post(id),
-	   FOREIGN KEY (category_id) REFERENCES category(id)
-	 )
-	 
-		`)
-	checkErr(err)
-	statement.Exec()
+	stmt, err := dbConn.Prepare(`INSERT INTO post(id, title, content, created, category, user_name) VALUES(?, ?, ?, ?, ?, ?)`)
+	if err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	stmt.Exec("1", "First post on NFT category!", "Test post! How are you! Have a nice day! :)", "2022-05-01 11:30:22", "nft", "Test1User")
 }
 
 func createComment(dbConn *sql.DB) {
@@ -109,6 +105,12 @@ func createComment(dbConn *sql.DB) {
 	 `)
 	checkErr(err)
 	statement.Exec()
+	stmt, err := dbConn.Prepare(`INSERT INTO comment(id, content, post_id, user_name, created) VALUES(?, ?, ?, ?, ?)`)
+	if err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	stmt.Exec("1", "First post :)", "1", "Gukka", "2022-05-02 12:30:22")
 }
 func messages(dbConn *sql.DB) {
 	statement, err := dbConn.Prepare(`
@@ -123,35 +125,3 @@ func messages(dbConn *sql.DB) {
 	checkErr(err)
 	statement.Exec()
 }
-
-// func createReactionPost(dbConn *sql.DB) {
-// 	statement, err := dbConn.Prepare(`
-// 	CREATE TABLE  reaction_post  (
-// 		emotion integer not null,
-// 	   post_id integer not null,
-// 	   user_name varchar(255) not null,
-// 	 PRIMARY KEY (post_id, user_name)
-// 	   FOREIGN KEY (post_id) REFERENCES post(id),
-// 	   FOREIGN KEY (user_name) REFERENCES user_account(user_name)
-// 	 )
-
-// 		`)
-// 	checkErr(err)
-// 	statement.Exec()
-// }
-
-// func createReactionComment(dbConn *sql.DB) {
-// 	statement, err := dbConn.Prepare(`
-// 	CREATE TABLE  reaction_comment  (
-// 		emotion integer not null,
-// 		comment_id integer not null,
-// 		user_name varchar(255) not null,
-// 	  PRIMARY KEY (comment_id, user_name)
-// 		FOREIGN KEY (comment_id) REFERENCES comment(id),
-// 		FOREIGN KEY (user_name) REFERENCES user_account(user_name)
-// 	  )
-
-// 		`)
-// 	checkErr(err)
-// 	statement.Exec()
-// }

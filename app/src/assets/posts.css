@@ -86,10 +86,7 @@
     cursor: pointer;
     outline: none;
   }
-  textarea{
-    width: 700px;
-    height: 80px;
-  }
+ 
   .newpostform .txt_field1{
     position: relative;
     border-bottom: 2px solid #adadad;

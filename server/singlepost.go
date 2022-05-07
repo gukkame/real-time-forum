@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -12,6 +11,7 @@ type comment struct {
 	Content  string `json:"content"`
 	PostId   int    `json:"postid"`
 	Username string `json:"username"`
+	Created  string `json:"created"`
 }
 
 func singlepostcom(w http.ResponseWriter, req *http.Request) {
@@ -21,7 +21,6 @@ func singlepostcom(w http.ResponseWriter, req *http.Request) {
 	var allComments []comment
 
 	decoder.Decode(&postid)
-	fmt.Println("singlepostcomments....", postid)
 
 	db, err := sql.Open("sqlite3", "./Database/forum.db")
 	checkErr(err)
