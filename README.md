@@ -1,3 +1,17 @@
+#Real Time Forum
+
+Includes: 
+* Registration and Login
+* User authentification, sessions and cookies 
+* Adding posts and comments and saving into database using SQLite
+* Private messages using Go Websockets
+
+* Front-end build using Vue.js framework
+* Back-end build using Go
+
+Project requirements are found here `https://01.kood.tech/git/root/public/src/branch/master/subjects/real-time-forum`
+
+
 ## How to run
 
 - Clone the repo
