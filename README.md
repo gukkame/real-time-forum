@@ -1,5 +1,5 @@
-#Real Time Forum
-
+# Real Time Forum
+----
 Includes: 
 * Registration and Login
 * User authentification, sessions and cookies 
